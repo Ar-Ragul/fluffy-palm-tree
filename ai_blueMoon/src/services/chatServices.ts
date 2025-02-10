@@ -41,3 +41,22 @@ export async function fetchArchitectTask(): Promise<string> {
     return "⚠️ Unable to fetch Architect's task.";
   }
 }
+
+export async function sendArchitectTask(task: string): Promise<string> {
+  await fetch(`${API_URL}/architect-task`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ task }),
+  });
+  return "Task saved successfully!";
+}
+
+export async function sendDeveloperUpdate(update: string): Promise<string> {
+  const response = await fetch(`${API_URL}/developer-update`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ update }),
+  });
+  const data = await response.json();
+  return data.response;
+}
