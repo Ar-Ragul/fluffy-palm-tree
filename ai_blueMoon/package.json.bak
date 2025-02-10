@@ -1,0 +1,36 @@
+{
+  "name": "ai-bluemoon",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^6.4.3",
+    "@mui/material": "^6.4.3",
+    "@shadcn/ui": "^0.0.4",
+    "@tailwindcss/forms": "^0.5.10",
+    "@vitejs/plugin-react": "^4.3.4",
+    "axios": "^1.7.9",
+    "domutils": "^3.2.2",
+    "framer-motion": "^12.4.1",
+    "lucide-react": "^0.475.0",
+    "preact": "^10.25.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.1",
+    "@types/node": "^22.13.1",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^4.0.5",
+    "typescript": "~5.7.2",
+    "vite": "^6.1.0"
+  }
+}
