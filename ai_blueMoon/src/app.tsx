@@ -1,16 +1,32 @@
-import React, { useState } from "react";
-import Chatbot from '/Users/ragulraghunath/Desktop/Project/fluffy-palm-tree/ai_blueMoon/src/component/chatbot/chatbot.tsx'
-import  Agent  from '/Users/ragulraghunath/Desktop/Project/fluffy-palm-tree/ai_blueMoon/src/component/agent/agent.tsx'
-import { Button, Box } from "@mui/material";
+import React from "react";
+import {
+    BrowserRouter,
+    Routes,
+    Route,
+} from "react-router-dom";
+
+import Home from '/Users/ragulraghunath/Desktop/Project/fluffy-palm-tree/ai_blueMoon/src/component/home/home.tsx';
+import MultiAgent from '/Users/ragulraghunath/Desktop/Project/fluffy-palm-tree/ai_blueMoon/src/component/multiAgent/multiAgent.tsx';
 
 function App() {
-  const [view, setView] = useState<string>("agent");
-
-  return (
-    <Box sx={{ textAlign: "center", width: "100vw", height: "100vh" }}>
-      {view === "chatbot" ? <Chatbot switchView={() => setView("agent")} /> : <Agent switchView={() => setView("chatbot")} />}
-    </Box>
-  );
+    return (
+        <>
+            <BrowserRouter>
+                <Routes>
+                    <Route
+                        path="/"
+                        element={<Home />}
+                    />
+                </Routes>
+                <Routes>
+                    <Route
+                        path="/multiagent"
+                        element={<MultiAgent />}
+                    />
+                </Routes>
+            </BrowserRouter>
+        </>
+    );
 }
 
 export default App;

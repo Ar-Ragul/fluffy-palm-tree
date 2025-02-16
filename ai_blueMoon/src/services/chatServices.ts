@@ -13,6 +13,16 @@ export const sendMessageToAI = async (prompt:any) => {
   }
 };
 
+export const getExistingAgents = async (): Promise<any[]> => {
+  try {
+      const response = await axios.get<{ agents: any[] }>(`${API_URL}/agents`);
+      return response.data.agents || [];
+  } catch (error) {
+      console.error("❌ Error fetching agents:", error);
+      return [];
+  }
+};
+
 export async function sendAgentQuery(query: string, role: string): Promise<string> {
   try {
     const response = await fetch(`${API_URL}/agent`, {
@@ -60,3 +70,32 @@ export async function sendDeveloperUpdate(update: string): Promise<string> {
   const data = await response.json();
   return data.response;
 }
+
+export async function executeAITask(task: string): Promise<any> {
+  try {
+    const response = await fetch(`${API_URL}/ai-task`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ task }),
+    });
+
+    const data = await response.json();
+    console.log("🌍 Full API Response from Backend:", data); // ✅ Debugging Line
+    return data;
+  } catch (error) {
+    console.error("❌ API Error:", error);
+    return { aiResponse: [{ text: { value: "⚠️ Error executing AI task." } }] };
+  }
+}
+
+
+export const createAI_Agent = async (role: string) => {
+  const response = await fetch(`${API_URL}/create-agent`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ role }),
+  });
+
+  return response.json();
+};
+
