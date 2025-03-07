@@ -99,3 +99,36 @@ export const createAI_Agent = async (role: string) => {
   return response.json();
 };
 
+export const assignTaskToAgent = async (agentId: string, task: string): Promise<string> => {
+  try {
+      const response = await axios.post(`${API_URL}/assign-task`, { agentId, task });
+      const data = response.data as { response: string };
+      return data.response || "⚠️ No response from AI.";
+  } catch (error) {
+      console.error("❌ Task Assignment Error:", error);
+      return "⚠️ AI failed to process the task.";
+  }
+};
+
+export const createNewAgent = async (role: string, architectId: string): Promise<any> => {
+  try {
+      const response = await axios.post(`${API_URL}/create-agent`, { role, architectId });
+      const data = response.data as { agent: any };
+      return data.agent;
+  } catch (error) {
+      console.error("❌ Error creating AI agent:", error);
+      return { error: "Failed to create AI Agent." };
+  }
+};
+
+export const startRoundTableDiscussion = async (task: string): Promise<string[]> => {
+  try {
+      const response = await axios.post(`${API_URL}/roundtable`, { task });
+      return (response.data as { responses: string[] }).responses;
+  } catch (error) {
+      console.error("❌ Error in AI roundtable:", error);
+      return ["⚠️ AI discussion failed."];
+  }
+};
+
+
