@@ -16,6 +16,21 @@ const floatingStars = {
   }
 };
 
+const handleWaitlist = () => {
+  window.location.href = 'https://github.com/Ar-Ragul/sturdy-octo-dollop';
+}
+
+const handleEmail = () => {
+  const email = "ragul.r@payoda.com";
+  const subject = encodeURIComponent("Regarding AI BlueMoon Assistance");
+  const body = encodeURIComponent("Hi,\n\nI would like to discuss...");
+
+  const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
+  window.open(mailtoLink);
+};
+
+
+
 const Home: React.FC = () => {
   return (
     <Box
@@ -60,7 +75,7 @@ const Home: React.FC = () => {
             fontWeight="bold" 
             sx={{
               color: "#BB86FC",
-              textShadow: "0 0 10px rgba(187, 134, 252, 0.6)", // ✅ Reduced glow
+              textShadow: "0 0 12px rgba(138, 180, 248, 0.8)", // ✅ Reduced glow
               letterSpacing: "1.5px",
               fontFamily: "Montserrat, sans-serif", // ✅ Montserrat font
             }}
@@ -68,7 +83,7 @@ const Home: React.FC = () => {
             <span style={{color: "#ffffff", textShadow: "none"}}>Meet</span> AI bluemoon
           </Typography>
           <Typography variant="h6" color="#A0A0A0" sx={{ fontFamily: "Montserrat, sans-serif" }}>
-            we build apps that are both functional & beautiful.
+            Your Dream, Our Code, Infinite Possibilities.
           </Typography>
         </Box>
 
@@ -76,6 +91,7 @@ const Home: React.FC = () => {
         <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mb: 4 }}>
           <Button
             variant="contained"
+            onClick={handleWaitlist}
             sx={{
               bgcolor: "#BB86FC",
               color: "white",
@@ -91,10 +107,11 @@ const Home: React.FC = () => {
               },
             }}
           >
-            book a call
+            Join Waitlist
           </Button>
           <Button
             variant="outlined"
+            onClick={handleEmail}
             sx={{
               borderColor: "#BB86FC",
               color: "#BB86FC",

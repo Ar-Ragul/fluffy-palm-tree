@@ -44,16 +44,20 @@ export function Dashboard() {
 
   return (
     <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-        background: "linear-gradient(135deg, #121212 0%, #000000 100%)",
-        color: "#fff",
-      }}
-    >
+              sx={{
+                minHeight: "100vh",
+                width: "100vw",
+                background: "radial-gradient(circle, rgba(18,18,18,1) 20%, rgba(26,26,46,1) 80%)",
+                position: "relative",
+                overflow: "hidden",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "#E0E0E0",
+                fontFamily: "Montserrat, sans-serif", // ✅ Apply Montserrat
+              }}
+            >
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -147,10 +151,6 @@ export function Dashboard() {
           </Button>
         </motion.div>
       </Paper>
-
-      <Typography variant="body2" sx={{ mt: 3, opacity: 0.6 }}>
-        by PR Square
-      </Typography>
     </Box>
   );
 }

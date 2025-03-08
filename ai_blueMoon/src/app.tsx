@@ -7,6 +7,7 @@ import {
 
 import Home from '/Users/ragulraghunath/Desktop/Project/fluffy-palm-tree/ai_blueMoon/src/component/home/home.tsx';
 import MultiAgent from '/Users/ragulraghunath/Desktop/Project/fluffy-palm-tree/ai_blueMoon/src/component/multiAgent/multiAgent.tsx';
+import {Dashboard} from '/Users/ragulraghunath/Desktop/Project/fluffy-palm-tree/ai_blueMoon/src/component/dashboard/dashboard.tsx';
 
 function App() {
     return (
@@ -20,8 +21,14 @@ function App() {
                 </Routes>
                 <Routes>
                     <Route
-                        path="/multiagent"
+                        path="/ai-office-view"
                         element={<MultiAgent />}
+                    />
+                </Routes>
+                <Routes>
+                    <Route
+                        path="/single-agent"
+                        element={<Dashboard />}
                     />
                 </Routes>
             </BrowserRouter>
