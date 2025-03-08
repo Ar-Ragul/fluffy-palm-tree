@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getExistingAgents, executeAITask } from "/Users/ragulraghunath/Desktop/Project/fluffy-palm-tree/ai_blueMoon/src/services/chatServices.ts";
 import { Box, Button, Typography, Select, MenuItem, CircularProgress, FormControl, InputLabel, Paper, TextField } from "@mui/material";
 import { motion } from "framer-motion";
+import codeResponse from '/Users/ragulraghunath/Desktop/Project/fluffy-palm-tree/ai_blueMoon/src/component/codeResponse/codeResponse.tsx';
 // import ReactMarkdown from "react-markdown";
 // import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 // import { vs } from "react-syntax-highlighter/dist/cjs/styles/prism";
@@ -16,7 +17,7 @@ const MultiAgent = () => {
   const [task, setTask] = useState<string>("");
   const [role, setRole] = useState<string>("Software Architect");
   const [loading, setLoading] = useState(false);
-  const [aiResponse, setAiResponse] = useState<string[]>([]);
+  const [aiResponse, setAiResponse] = useState<{ role: string; text: string }[]>([]);
   const [existingAgents, setExistingAgents] = useState<any[]>([]);
 
   useEffect(() => {
@@ -35,55 +36,81 @@ const MultiAgent = () => {
 }, []);
 
 const handleExecuteTask = async () => {
-  setAiResponse(["🔄 AI Agents are discussing..."]);
+  setAiResponse([{ role: "System", text: "🔄 AI Agents are discussing..." }]);
 
-  const selectedAgent = existingAgents.find(agent => agent.name === role);
-  if (!selectedAgent) {
-      setAiResponse(["⚠️ No valid AI Agent found."]);
+  const architectAgent = existingAgents.find(agent => agent.name === "Software Architect");
+  const developerAgent = existingAgents.find(agent => agent.name === "Developer");
+  const qaAgent = existingAgents.find(agent => agent.name === "QA");
+
+  if (!architectAgent || !developerAgent || !qaAgent) {
+      setAiResponse([{ role: "System", text: "⚠️ Missing AI Agents for execution." }]);
       return;
   }
 
-  const agentId = selectedAgent.id;
+  // ✅ Step 1: Assign Task to Software Architect
+  const architectResponse = await assignTaskAndFetch(architectAgent.id, task, "Software Architect");
+  if (!architectResponse) return;
 
-  // ✅ Use Fetch with POST to start the AI stream
-  const response = await fetch(`http://localhost:3000/assign-task`, {
-      method: "POST",
-      headers: {
-          "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ agentId, task })
-  });
+  setAiResponse(prev => [...prev, { role: "Software Architect", text: architectResponse }]);
 
-  if (!response.ok) {
-      console.error("❌ AI Streaming Error: Request failed.");
-      setAiResponse(["⚠️ AI Task Execution Failed."]);
-      return;
-  }
+  // ✅ Step 2: Assign Architect's Response to Developer
+  const developerResponse = await assignTaskAndFetch(developerAgent.id, architectResponse, "Developer");
+  if (!developerResponse) return;
 
-  // ✅ Read the streamed response
-  const reader = response.body?.getReader();
-  if (!reader) {
-      console.error("❌ AI Streaming Error: Response body is null.");
-      setAiResponse(["⚠️ AI Task Execution Failed."]);
-      return;
-  }
-  const decoder = new TextDecoder();
+  setAiResponse(prev => [...prev, { role: "Developer", text: developerResponse }]);
 
-  while (true) {
-      const { value, done } = await reader.read();
-      if (done) break;
+  // ✅ Step 3: Assign Developer's Response to QA
+  const qaResponse = await assignTaskAndFetch(qaAgent.id, developerResponse, "QA");
+  if (!qaResponse) return;
 
-      const chunk = decoder.decode(value);
-      console.log("📩 Streamed Chunk:", chunk);
+  setAiResponse(prev => [...prev, { role: "QA", text: qaResponse }]);
 
-      try {
-          const data = JSON.parse(chunk.replace("data: ", "").trim());
-          setAiResponse((prev) => [...prev, data.text]); // ✅ Append streamed message
-      } catch (err) {
-          console.error("⚠️ JSON Parsing Error:", err);
+  setAiResponse(prev => [...prev, { role: "System", text: "✅ AI Discussion Completed." }]);
+};
+
+const assignTaskAndFetch = async (agentId: string, task: string, role: string) => {
+  try {
+      const response = await fetch(`http://localhost:3000/assign-task`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ agentId, task, role })
+      });
+
+      if (!response.ok) {
+          console.error(`❌ AI Task Failed for ${role}`);
+          return null;
       }
+
+      const data = await response.json();
+      return data.response;
+  } catch (error) {
+      console.error(`❌ AI Task Error for ${role}:`, error);
+      return null;
   }
 };
+
+
+
+// const assignTaskAndStream = async ({ agentId, task, role }: { agentId: string; task: string; role: string }) => {
+//   setAiResponse(prev => [...prev, { role: "System", text: `📨 Assigning Task to ${role}...` }]);
+
+//   const response = await fetch("http://localhost:3000/assign-task", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({ agentId, task, role }) // ✅ Ensure correct JSON format
+//   });
+
+//   if (!response.ok) {
+//       console.error(`❌ ${role} AI Task Failed.`);
+//       setAiResponse(prev => [...prev, { role: "System", text: `⚠️ ${role} AI Task Failed.` }]);
+//       return null;
+//   }
+
+//   const responseData = await response.json(); // ✅ Parse response
+//   console.log(`📩 ${role} AI Response:`, responseData);
+
+//   return responseData.response; // ✅ Extract & return AI response
+// };
 
 
 
@@ -206,15 +233,54 @@ const handleExecuteTask = async () => {
         🔥 AI Live Discussion:
     </Typography>
 
+    <Box sx={{ p: 3, background: "rgba(0,0,0,0.7)", borderRadius: "12px", width: "100%", maxWidth: "800px" }}>
+    <Typography variant="h5" sx={{ color: "#00D4FF", mb: 2, textAlign: "center", fontWeight: "bold" }}>
+        🔥 AI Collaborative Discussion
+    </Typography>
+
     {aiResponse.length === 0 ? (
-        <Typography sx={{ color: "#ddd", mt: 2 }}>💬 AI Agents are discussing...</Typography>
+        <Typography sx={{ color: "#ddd", mt: 2, textAlign: "center" }}>💬 AI Agents are discussing...</Typography>
     ) : (
         aiResponse.map((message, index) => (
-            <Typography key={index} sx={{ mt: 1, color: "#fff", fontSize: "14px" }}>
-                {message}
-            </Typography>
+            <Box 
+                key={index} 
+                sx={{ 
+                    p: 2, 
+                    mb: 2, 
+                    borderRadius: "8px", 
+                    background: message.role === "Software Architect"
+                        ? "rgba(255, 87, 34, 0.2)"  // Orange for SA
+                        : message.role === "Developer"
+                        ? "rgba(0, 150, 136, 0.2)"  // Green for Dev
+                        : "rgba(33, 150, 243, 0.2)", // Blue for QA
+                    borderLeft: `5px solid ${
+                        message.role === "Software Architect" ? "#FF5722" :
+                        message.role === "Developer" ? "#009688" :
+                        "#2196F3"
+                    }`
+                }}
+            >
+                <Typography 
+                    sx={{ 
+                        fontWeight: "bold", 
+                        color: message.role === "Software Architect"
+                            ? "#FF5722"
+                            : message.role === "Developer"
+                            ? "#009688"
+                            : "#2196F3",
+                        mb: 1 
+                    }}
+                >
+                    {message.role}: 
+                </Typography>
+
+                {/* AI Response Display */}
+                {codeResponse(message.text)}
+            </Box>
         ))
     )}
+</Box>
+
 </Box>
 
     </Box>
