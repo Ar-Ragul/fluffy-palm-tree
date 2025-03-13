@@ -3,11 +3,7 @@ import { getExistingAgents, executeAITask } from "/Users/ragulraghunath/Desktop/
 import { Box, Button, Typography, Select, MenuItem, CircularProgress, FormControl, InputLabel, Paper, TextField } from "@mui/material";
 import { motion } from "framer-motion";
 import codeResponse from '/Users/ragulraghunath/Desktop/Project/fluffy-palm-tree/ai_blueMoon/src/component/codeResponse/codeResponse.tsx';
-// import ReactMarkdown from "react-markdown";
-// import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-// import { vs } from "react-syntax-highlighter/dist/cjs/styles/prism";
-// import remarkGfm from "remark-gfm";
-// import rehypeRaw from "rehype-raw";
+
 
 // ✨ UI Styling Enhancements
 const buttonGradient = "linear-gradient(90deg, #7b61ff, #d441ff)";
@@ -90,34 +86,10 @@ const assignTaskAndFetch = async (agentId: string, task: string, role: string) =
 };
 
 
-
-// const assignTaskAndStream = async ({ agentId, task, role }: { agentId: string; task: string; role: string }) => {
-//   setAiResponse(prev => [...prev, { role: "System", text: `📨 Assigning Task to ${role}...` }]);
-
-//   const response = await fetch("http://localhost:3000/assign-task", {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify({ agentId, task, role }) // ✅ Ensure correct JSON format
-//   });
-
-//   if (!response.ok) {
-//       console.error(`❌ ${role} AI Task Failed.`);
-//       setAiResponse(prev => [...prev, { role: "System", text: `⚠️ ${role} AI Task Failed.` }]);
-//       return null;
-//   }
-
-//   const responseData = await response.json(); // ✅ Parse response
-//   console.log(`📩 ${role} AI Response:`, responseData);
-
-//   return responseData.response; // ✅ Extract & return AI response
-// };
-
-
-
   return (
      <Box
           sx={{
-            minHeight: "100vh",
+            minHeight: "500vh",
             width: "100vw",
             background: "radial-gradient(circle, rgba(18,18,18,1) 20%, rgba(26,26,46,1) 80%)",
             position: "relative",
@@ -224,7 +196,7 @@ const assignTaskAndFetch = async (agentId: string, task: string, role: string) =
         background: "rgba(0, 0, 0, 0.2)",
         padding: "16px",
         borderRadius: "12px",
-        maxHeight: "300px",
+        maxHeight: "200vh",
         overflowY: "auto",
         width: "100%",
     }}

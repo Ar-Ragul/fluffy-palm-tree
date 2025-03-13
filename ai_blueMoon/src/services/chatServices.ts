@@ -89,7 +89,7 @@ export async function executeAITask(task: string): Promise<any> {
 }
 
 
-export const createAI_Agent = async (role: string) => {
+export const createAI_Agent = async (role: string, description: string) => {
   const response = await fetch(`${API_URL}/create-agent`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

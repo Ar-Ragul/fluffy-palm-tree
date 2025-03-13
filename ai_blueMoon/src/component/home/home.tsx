@@ -138,7 +138,7 @@ const Home: React.FC = () => {
         </Typography>
         <Grid container spacing={2}>
           {[
-            { title: "Multi-Agents", subtitle: "AI-driven agent system", icon: "🤖", link: "/multiagent" },
+            { title: "Hire Your Agents", subtitle: "AI-driven agent Hiring System", icon: "🤖", link: "/create-agent" },
             { title: "Single-Agent", subtitle: "One AI for all tasks", icon: "⚡", link: "/single-agent" },
             { title: "AI Office View", subtitle: "A virtual office powered by AI", icon: "🏢", link: "/ai-office-view" }
           ].map((item, index) => (
