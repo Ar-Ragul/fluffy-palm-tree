@@ -3,6 +3,7 @@ import { sendMessageToAI } from "../../services/chatServices";
 import { TextField, Button, Box, Typography, Paper, CircularProgress } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { motion } from "framer-motion";
+import './dasboard.css';
 
 interface Message {
   sender: "user" | "ai";
@@ -38,11 +39,12 @@ export function Dashboard() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target) {
-      setPrompt(e.target.value);
+      setPrompt(e.currentTarget.value);
     }
   };
 
   return (
+    <>
     <Box
               sx={{
                 minHeight: "100vh",
@@ -152,6 +154,20 @@ export function Dashboard() {
         </motion.div>
       </Paper>
     </Box>
+    
+   
+{/* <div class="parent">
+    <div class="div1">Ragul</div>
+    <div class="div2">Ragul</div>
+    <div class="div3">Ragul</div>
+    <div class="div4">Ragul</div>
+    <div class="div5">Ragul</div>
+    <div class="div6">Ragul</div>
+    <div class="div7">Ragul</div>
+    <div class="div8">Ragul</div>
+</div> */}
+    </>
+    
   );
 }
 

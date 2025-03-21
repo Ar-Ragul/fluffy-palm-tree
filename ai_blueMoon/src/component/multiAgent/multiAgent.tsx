@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { getExistingAgents, executeAITask } from "/Users/ragulraghunath/Desktop/Project/fluffy-palm-tree/ai_blueMoon/src/services/chatServices.ts";
-import { Box, Button, Typography, Select, MenuItem, CircularProgress, FormControl, InputLabel, Paper, TextField } from "@mui/material";
+import { getExistingAgents } from "/Users/ragulraghunath/Desktop/Project/fluffy-palm-tree/ai_blueMoon/src/services/chatServices.ts";
+import { Box, Button, Typography, Paper, TextField } from "@mui/material";
+import {AgentGrid} from "/Users/ragulraghunath/Desktop/Project/fluffy-palm-tree/ai_blueMoon/src/component/multiAgent/agentCard.tsx";
 import { motion } from "framer-motion";
-import codeResponse from '/Users/ragulraghunath/Desktop/Project/fluffy-palm-tree/ai_blueMoon/src/component/codeResponse/codeResponse.tsx';
+import  AIDiscussion  from "/Users/ragulraghunath/Desktop/Project/fluffy-palm-tree/ai_blueMoon/src/component/multiAgent/aiDiscussion.tsx";
+
 
 
 // ✨ UI Styling Enhancements
 const buttonGradient = "linear-gradient(90deg, #7b61ff, #d441ff)";
 const glassBg = "rgba(255, 255, 255, 0.15)";
+
+
 
 const MultiAgent = () => {
   const [task, setTask] = useState<string>("");
@@ -15,20 +19,68 @@ const MultiAgent = () => {
   const [loading, setLoading] = useState(false);
   const [aiResponse, setAiResponse] = useState<{ role: string; text: string }[]>([]);
   const [existingAgents, setExistingAgents] = useState<any[]>([]);
+  const [socket, setSocket] = useState<WebSocket | null>(null);
 
   useEffect(() => {
     const fetchAgents = async () => {
-        const agents = await getExistingAgents();
-        
-        // ✅ Remove duplicates by using a Map (keyed by agent name)
-        const uniqueAgents = Array.from(
-            new Map(agents.map(agent => [agent.name, agent])).values()
-        );
+      const agents = await getExistingAgents();
+      
+      // ✅ Remove duplicates by using a Map (keyed by agent name)
+      const uniqueAgents = Array.from(
+          new Map(agents.map(agent => [agent.name, agent])).values()
+      );
 
-        setExistingAgents(uniqueAgents);
-    };
+      setExistingAgents(uniqueAgents);
+  };
 
-    fetchAgents();
+  fetchAgents();
+  //   const ws = new WebSocket("ws://localhost:3000");
+  //   setSocket(ws);
+
+  //   ws.onopen = () => {
+  //     console.log("WebSocket connection established");
+  // };
+
+  // ws.onmessage = (event) => {
+  //     const data = JSON.parse(event.data);
+  //     switch (data.type) {
+  //         case "TASK_UPDATE":
+  //             // Update the response with incremental text
+  //             setAiResponse(prev => {
+  //                 const lastMessage = prev[prev.length - 1];
+  //                 if (lastMessage && lastMessage.role === data.data.role) {
+  //                     // Append the new text to the last message
+  //                     return [
+  //                         ...prev.slice(0, -1),
+  //                         { role: data.data.role, text: lastMessage.text + data.data.response }
+  //                     ];
+  //                 } else {
+  //                     // Add a new message
+  //                     return [...prev, { role: data.data.role, text: data.data.response }];
+  //                 }
+  //             });
+  //             break;
+
+  //         case "TASK_COMPLETED":
+  //             setAiResponse(prev => [...prev, { role: data.data.role, text: data.data.response }]);
+  //             break;
+
+  //         case "TASK_FAILED":
+  //             setAiResponse(prev => [...prev, { role: "System", text: `Error: ${data.data.error}` }]);
+  //             break;
+
+  //         default:
+  //             console.log("Unknown message type:", data.type);
+  //     }
+  // };
+
+  // ws.onclose = () => {
+  //     console.log("WebSocket connection closed");
+  // };
+
+  // return () => {
+  //     ws.close();
+  // };
 }, []);
 
 const handleExecuteTask = async () => {
@@ -122,25 +174,12 @@ const assignTaskAndFetch = async (agentId: string, task: string, role: string) =
           mb: 3,
         }}
       >
-        <FormControl fullWidth sx={{ mb: 3 }}>
-          <InputLabel sx={{ color: "#fff" }}>Select AI Agent</InputLabel>
-          <Select
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            sx={{
-              bgcolor: glassBg,
-              borderRadius: "8px",
-              color: "#fff",
-              "& .MuiSvgIcon-root": { color: "white" },
-            }}
-          >
-            {existingAgents.map((agent, index) => (
-              <MenuItem key={index} value={agent.name}>
-                {agent.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <Box sx={{ width: "100%", mb: 3 }}>
+  <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", color: "#fff" }}>
+    Select AI Agent
+  </Typography>
+  <AgentGrid existingAgents={existingAgents} role={role} setRole={setRole} />
+</Box>
       </Paper>
 
       {/* 🔹 Task Input Panel */}
@@ -164,7 +203,11 @@ const assignTaskAndFetch = async (agentId: string, task: string, role: string) =
           variant="outlined"
           placeholder="Enter the task for AI agents..."
           value={task}
-          onChange={(e) => setTask(e.target.value)}
+          onChange={(e) => {
+            if (e.target) {
+              setTask((e.target as HTMLInputElement).value);
+            }
+          }}
           sx={{
             mb: 3,
             bgcolor: glassBg,
@@ -191,69 +234,7 @@ const assignTaskAndFetch = async (agentId: string, task: string, role: string) =
       </Paper>
 
       {/* 🔹 Live AI Discussion Panel */}
-      <Box
-    sx={{
-        background: "rgba(0, 0, 0, 0.2)",
-        padding: "16px",
-        borderRadius: "12px",
-        maxHeight: "200vh",
-        overflowY: "auto",
-        width: "100%",
-    }}
->
-    <Typography variant="h6" sx={{ fontWeight: "bold", color: "#ff8c00" }}>
-        🔥 AI Live Discussion:
-    </Typography>
-
-    <Box sx={{ p: 3, background: "rgba(0,0,0,0.7)", borderRadius: "12px", width: "100%", maxWidth: "800px" }}>
-    <Typography variant="h5" sx={{ color: "#00D4FF", mb: 2, textAlign: "center", fontWeight: "bold" }}>
-        🔥 AI Collaborative Discussion
-    </Typography>
-
-    {aiResponse.length === 0 ? (
-        <Typography sx={{ color: "#ddd", mt: 2, textAlign: "center" }}>💬 AI Agents are discussing...</Typography>
-    ) : (
-        aiResponse.map((message, index) => (
-            <Box 
-                key={index} 
-                sx={{ 
-                    p: 2, 
-                    mb: 2, 
-                    borderRadius: "8px", 
-                    background: message.role === "Software Architect"
-                        ? "rgba(255, 87, 34, 0.2)"  // Orange for SA
-                        : message.role === "Developer"
-                        ? "rgba(0, 150, 136, 0.2)"  // Green for Dev
-                        : "rgba(33, 150, 243, 0.2)", // Blue for QA
-                    borderLeft: `5px solid ${
-                        message.role === "Software Architect" ? "#FF5722" :
-                        message.role === "Developer" ? "#009688" :
-                        "#2196F3"
-                    }`
-                }}
-            >
-                <Typography 
-                    sx={{ 
-                        fontWeight: "bold", 
-                        color: message.role === "Software Architect"
-                            ? "#FF5722"
-                            : message.role === "Developer"
-                            ? "#009688"
-                            : "#2196F3",
-                        mb: 1 
-                    }}
-                >
-                    {message.role}: 
-                </Typography>
-
-                {/* AI Response Display */}
-                {codeResponse(message.text)}
-            </Box>
-        ))
-    )}
-</Box>
-
-</Box>
+      <AIDiscussion aiResponse={aiResponse} />
 
     </Box>
   );
