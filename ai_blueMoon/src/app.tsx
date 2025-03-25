@@ -5,10 +5,10 @@ import {
     Route,
 } from "react-router-dom";
 
-import Home from '/Users/ragulraghunath/Desktop/Project/fluffy-palm-tree/ai_blueMoon/src/component/home/home.tsx';
-import MultiAgent from '/Users/ragulraghunath/Desktop/Project/fluffy-palm-tree/ai_blueMoon/src/component/multiAgent/multiAgent.tsx';
-import {Dashboard} from '/Users/ragulraghunath/Desktop/Project/fluffy-palm-tree/ai_blueMoon/src/component/dashboard/dashboard.tsx';
-import AgentHiring from '/Users/ragulraghunath/Desktop/Project/fluffy-palm-tree/ai_blueMoon/src/component/agent/agent.tsx';
+import Home from './component/home/home.tsx';
+import MultiAgent from './component/multiAgent/multiAgent.tsx';
+import {Dashboard} from './component/dashboard/dashboard.tsx';
+import AgentHiring from './component/agent/agent.tsx';
 
 function App() {
     return (

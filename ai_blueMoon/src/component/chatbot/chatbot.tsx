@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { sendMessageToAI } from "/Users/ragulraghunath/Desktop/Project/fluffy-palm-tree/ai_blueMoon/src/services/chatServices.ts";
+import { sendMessageToAI } from '../../services/chatServices.ts';
 import { TextField, Button, Box, Typography, Paper, CircularProgress } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz";

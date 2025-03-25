@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { getExistingAgents } from "/Users/ragulraghunath/Desktop/Project/fluffy-palm-tree/ai_blueMoon/src/services/chatServices.ts";
-import { Box, Button, Typography, Paper, TextField, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
-import { AgentGrid } from "/Users/ragulraghunath/Desktop/Project/fluffy-palm-tree/ai_blueMoon/src/component/multiAgent/agentCard.tsx";
+import { getExistingAgents } from '../../services/chatServices.ts';
+import { Box, Button, Typography, Paper, TextField } from "@mui/material";
+import {AgentGrid}  from './agentCard.tsx';
 import { motion } from "framer-motion";
-import AIDiscussion from "/Users/ragulraghunath/Desktop/Project/fluffy-palm-tree/ai_blueMoon/src/component/multiAgent/aiDiscussion.tsx";
+import AIDiscussion from "./aiDiscussion.tsx";
 
 // ✨ UI Styling Enhancements
 const buttonGradient = "linear-gradient(90deg, #7b61ff, #d441ff)";
@@ -83,7 +83,7 @@ const MultiAgent = () => {
 
   const assignTaskAndFetch = async (agentId: string, task: string, role: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/assign-task`, {
+      const response = await fetch(`https://sturdy-octo-dollop-bphe.onrender.com/assign-task`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ agentId, task, role }),

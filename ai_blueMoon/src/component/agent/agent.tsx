@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { createAI_Agent, getExistingAgents } from "/Users/ragulraghunath/Desktop/Project/fluffy-palm-tree/ai_blueMoon/src/services/chatServices.ts";
-import { TextField, Button, Box, Typography, Paper, CircularProgress } from "@mui/material";
+import { createAI_Agent, getExistingAgents } from '../../services/chatServices.ts';
+import { TextField, Button, Box, Typography, Paper } from "@mui/material";
 import { motion } from "framer-motion";
 
 function AgentHiring () {
