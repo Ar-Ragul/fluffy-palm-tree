@@ -1,6 +1,6 @@
 import React, {useEffect, useRef} from "react";
 import { Box, Typography, Avatar } from "@mui/material";
-import codeResponse from '/Users/ragulraghunath/Desktop/Project/fluffy-palm-tree/ai_blueMoon/src/component/codeResponse/codeResponse.tsx';
+import codeResponse from '../../component/codeResponse/codeResponse.tsx';
 
 interface Message {
     role: string;
