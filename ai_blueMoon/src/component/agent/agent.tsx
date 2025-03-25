@@ -28,7 +28,7 @@ function AgentHiring () {
 
     setLoading(true);
     try {
-      const response = await createAI_Agent(agentName, agentRole, agentDescription);
+      const response = await createAI_Agent(agentRole, agentDescription);
       if (response) {
         setExistingAgents((prev) => [...prev, response]);
         setAgentName("");
@@ -80,7 +80,7 @@ function AgentHiring () {
         <Typography variant="h6" sx={{ fontWeight: "bold", mb: 2 }}>
           ✨ Define New AI Agent
         </Typography>
-        <TextField
+        {/* <TextField
           fullWidth
           variant="outlined"
           label="Agent Name"
@@ -93,7 +93,7 @@ function AgentHiring () {
             borderRadius: "8px",
             input: { color: "white" },
           }}
-        />
+        /> */}
         <TextField
           fullWidth
           variant="outlined"

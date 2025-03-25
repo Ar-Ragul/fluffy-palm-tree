@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000"; // Backend URL
+const API_URL = "https://sturdy-octo-dollop-bphe.onrender.com"; // Backend URL
 
 export const sendMessageToAI = async (prompt:any) => {
   try {
@@ -89,13 +89,12 @@ export async function executeAITask(task: string): Promise<any> {
 }
 
 
-export const createAI_Agent = async (role: string, description: string) => {
+export const createAI_Agent = async (role: string, agentDescription: string) => {
   const response = await fetch(`${API_URL}/create-agent`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ role }),
+      body: JSON.stringify({ role, agentDescription}),
   });
-
   return response.json();
 };
 
